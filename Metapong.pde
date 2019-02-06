@@ -1,17 +1,31 @@
-final float SLOW = 1;
-final float MEDIUM = 0.90;
-final float FAST = 0.75;
+import processing.sound.*;
 
-float speedFactor = MEDIUM;
+SoundFile scoreEffect;
+SoundFile borderBounceEffect;
+SoundFile paddleBounceEffect;
+
+
+final float SLOW = 1.2;
+final float MEDIUM = 0.90;
+final float FAST = 0.65;
+
+float speedFactor = FAST;
 
 Ball ball;
 Paddle player1;
 Paddle player2;
 Scoreboard scores;
 
+boolean wPressed;
+boolean sPressed;
+boolean upPressed;
+boolean downPressed;
+
 void setup() {
   size(880,680);
-  
+  scoreEffect = new SoundFile(this, ".\\Sound Effects\\Score Effects\\collect-normal-coin.wav");
+  borderBounceEffect = new SoundFile(this, ".\\Sound Effects\\Border Bounce Effects\\lotom-sfxr.wav");
+  paddleBounceEffect = new SoundFile(this, ".\\Sound Effects\\Paddle Bounce Effects\\Wah.mp3");
   ball = new Ball(speedFactor);
   player1 = new Paddle(speedFactor, 1);
   player2 = new Paddle(speedFactor, 2);
@@ -20,30 +34,12 @@ void setup() {
 
 void draw() {
   background(0);
+  processBounces();
+  movePlayers();
   ball.move();
-  scores.update();
+  checkScores();
   ball.display();
   player1.display();
   player2.display();
   scores.display();
-}
-
-void keyPressed() {
-  if (key == 'w' || key == 'W') {
-    if (player1.speed > 0) player1.speed = -player1.speed;
-    player1.move();
-  } else if (key == 's' || key == 'S') {
-    if (player1.speed < 0) player1.speed = -player1.speed;
-    player1.move();
-  } 
-  
-  if (key == CODED) {
-    if (keyCode == UP) {
-      if (player2.speed > 0) player2.speed = -player2.speed;
-      player2.move();
-    } else if (keyCode == DOWN) {
-      if (player2.speed < 0) player2.speed = -player2.speed;
-      player2.move();
-    }
-  }
 }

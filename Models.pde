@@ -18,28 +18,10 @@ class Ball {
   
   void setRandomSpeed() {
     speedX = int(pow(-1,int(random(1)+0.5))) * random(1, speedMod + 1);
-    speedY = int(pow(-1,int(random(1)+0.5))) * sqrt(pow(speedMod, 2) - pow(speedX, 2));
+    speedY = int(pow(-1,int(random(1)+0.5))) * sqrt(abs(pow(speedMod, 2) - pow(speedX, 2)));
   }
   
   void move() {
-    if (ypos + size > height || ypos - size < 0) {
-      speedY *= -1;
-    }
-    if ((xpos+(size/2) == player1.xpos+(size/2) && ypos+(size/2) < player1.ypos+(size*2) && ypos-(size/2) > player1.ypos-(size*2))
-          || (xpos+size == player2.xpos+(size/2) && ypos+size < player2.ypos+(size*2) && ypos-size > player2.ypos-(size*2))) {
-      float newSpeedX = speedY;
-      float newSpeedY = speedX;
-      if (speedX > 0 && newSpeedX > 0 || speedX < 0 && newSpeedX < 0) {
-        speedX = -newSpeedX;
-      } else {
-        speedX = newSpeedX;
-      }
-      if (speedY > 0 && newSpeedY < 0 || speedY < 0 && newSpeedY > 0) {
-        speedY = -newSpeedY;
-      } else {
-        speedY = newSpeedY;
-      }
-    } 
     xpos += speedX;
     ypos += speedY;
   }
@@ -67,20 +49,24 @@ class Paddle {
   Paddle(float speedFactor, int player) {
     c = color(255);
     size = height/30;
-    speed = (width/2) / (speedFactor * 0.5 * frameRate);
+    speed = (width/2) / (speedFactor * frameRate);
     ypos = height/2;
     switch(player) {
       case 1:
-        xpos = 0 + size;
+        xpos = 0 + (size*2);
         break;
       case 2:
-        xpos = width -  size;
+        xpos = width - (size*2);
         break;
     }
   }
   
-  void move() {
-    if ((speed > 0 && (ypos+(size*2)+speed) <= height) || (speed < 0 && (ypos-(size*2)+speed) >= 0)) ypos += speed;
+  void moveUp() {
+    if (ypos-(size*2)-speed >= 0) ypos -= speed;
+  }
+  
+  void moveDown() {
+    if(ypos+(size*2)+speed <= height) ypos += speed;
   }
   
   void display() {
@@ -93,18 +79,6 @@ class Paddle {
 class Scoreboard {
   int score1 = 0;
   int score2 = 0;
-  
-  void update() {
-    if (ball.xpos + (ball.size/2) > width) {
-      scores.score1++;
-      ball.resetPos();
-      delay(250);
-    } else if (ball.xpos - (ball.size/2) < 0) {
-      scores.score2++;
-      ball.resetPos();
-      delay(250);
-    }
-  }
   
    void display() {
      textSize(50);
