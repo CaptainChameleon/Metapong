@@ -17,7 +17,7 @@ class Ball {
   }
   
   void setRandomSpeed() {
-    speedX = int(pow(-1,int(random(1)+0.5))) * random(1, speedMod + 1);
+    speedX = int(pow(-1,int(random(1)+0.5))) * random(4, speedMod + 1);
     speedY = int(pow(-1,int(random(1)+0.5))) * sqrt(abs(pow(speedMod, 2) - pow(speedX, 2)));
   }
   
@@ -62,10 +62,12 @@ class Paddle {
   }
   
   void moveUp() {
-    if (ypos-(size*2)-speed >= 0) ypos -= speed;
+    if (speed > 0) speed *= -1;
+    if (ypos-(size*2)+speed >= 0) ypos += speed;
   }
   
   void moveDown() {
+    if (speed < 0) speed *= -1;
     if(ypos+(size*2)+speed <= height) ypos += speed;
   }
   
